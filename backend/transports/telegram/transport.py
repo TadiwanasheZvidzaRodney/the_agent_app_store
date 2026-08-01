@@ -1,4 +1,10 @@
 import os
+import certifi
+
+# Fix for Windows SSL Certificate Verification Error
+os.environ["SSL_CERT_FILE"] = certifi.where()
+os.environ["SSL_CERT_DIR"] = certifi.where()
+
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, CallbackQueryHandler, filters
@@ -105,7 +111,10 @@ async def start_telegram_bot():
         logger.error("TELEGRAM_BOT_TOKEN is not set in .env. Bot cannot start.")
         return
         
-    application = ApplicationBuilder().token(token).build()
+    from telegram.request import HTTPXRequest
+    # Disable SSL verification for local dev to bypass Windows cert/proxy issues
+    request = HTTPXRequest(httpx_kwargs={"verify": False})
+    application = ApplicationBuilder().token(token).request(request).build()
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("store", store))
@@ -114,4 +123,6 @@ async def start_telegram_bot():
     application.add_handler(MessageHandler(filters.VOICE, handle_voice))
 
     logger.info("Telegram polling initialized.")
-    await application.run_polling()
+    await application.initialize()
+    await application.start()
+    await application.updater.start_polling()

@@ -1,6 +1,3 @@
-import reactLogo from '../assets/react.svg'
-import viteLogo from '../assets/vite.svg'
-
 export default function Docs() {
   return (
     <div id="docs">
@@ -12,13 +9,11 @@ export default function Docs() {
       <ul>
         <li>
           <a href="https://vite.dev/" target="_blank" rel="noreferrer">
-            <img className="logo" src={viteLogo} alt="" />
             Explore Vite
           </a>
         </li>
         <li>
           <a href="https://react.dev/" target="_blank" rel="noreferrer">
-            <img className="button-icon" src={reactLogo} alt="" />
             Learn more
           </a>
         </li>
