@@ -93,7 +93,8 @@ npm run dev
  │   ├── /db                # Prisma Client & CRUD logic separated by domain
  │   ├── /prisma            # Prisma schema definitions (Modularized)
  │   ├── /services          # External integrations (Groq, TTS)
- │   ├── /transports        # Protocol integrations (Telegram)
+ │   ├── /transports        # Protocol integrations
+ │   │   └── /telegram      # Telegram bot webhooks and API polling
  │   ├── main.py            # Entry point for Uvicorn
  │   └── requirements.txt
  │
