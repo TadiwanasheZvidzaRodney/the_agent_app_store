@@ -1,0 +1,11 @@
+model Agent {
+  id            String    @id @default(uuid())
+  name          String
+  description   String?
+  system_prompt String
+  voice_type    String?   @default("default")
+  llm_model     String    @default("llama3-8b-8192")
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  sessions      Session[]
+}

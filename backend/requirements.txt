@@ -1,0 +1,7 @@
+pipecat-ai
+python-telegram-bot
+groq
+prisma
+python-dotenv
+fastapi
+uvicorn

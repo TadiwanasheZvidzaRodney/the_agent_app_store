@@ -1,0 +1,7 @@
+model User {
+  id          String    @id @default(uuid())
+  telegram_id String    @unique
+  username    String?
+  createdAt   DateTime  @default(now())
+  sessions    Session[]
+}

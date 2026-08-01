@@ -1,0 +1,10 @@
+model Session {
+  id        String    @id @default(uuid())
+  user_id   String
+  agent_id  String
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [user_id], references: [id])
+  agent     Agent     @relation(fields: [agent_id], references: [id])
+  messages  Message[]
+}
