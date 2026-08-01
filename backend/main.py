@@ -38,8 +38,19 @@ async def startup_event():
     try:
         await db.connect()
         logger.info("Connected to database.")
+        
+        import json
+        from db.crud import sync_core_agents
+        # Sync core agents
+        core_agents_path = os.path.join(os.path.dirname(__file__), "agents", "core_agents.json")
+        if os.path.exists(core_agents_path):
+            with open(core_agents_path, "r") as f:
+                core_agents = json.load(f)
+            await sync_core_agents(core_agents)
+            logger.info(f"Synced {len(core_agents)} core agents to DB.")
+            
     except Exception as e:
-        logger.error(f"Failed to connect to DB: {e}")
+        logger.error(f"Failed to connect or sync DB: {e}")
         
     asyncio.create_task(start_telegram_bot())
 

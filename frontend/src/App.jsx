@@ -1,21 +1,14 @@
-import Hero from './components/Hero'
-import Docs from './components/Docs'
-import Social from './components/Social'
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Landing from './pages/Landing'
+import Dashboard from './pages/Dashboard'
 
-function App() {
+export default function App() {
   return (
-    <>
-      <Hero />
-      <div className="ticks"></div>
-      <section id="next-steps">
-        <Docs />
-        <Social />
-      </section>
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
-
-export default App
