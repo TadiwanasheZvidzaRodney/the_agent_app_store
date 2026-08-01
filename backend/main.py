@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 from db.client import db
-from transports.telegram_transport import start_telegram_bot
+from transports.telegram.transport import start_telegram_bot
 from api.agents.router import router as agents_router
 from api.users.router import router as users_router
 
