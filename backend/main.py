@@ -40,14 +40,29 @@ async def startup_event():
         logger.info("Connected to database.")
         
         import json
+        import os
         from db.crud import sync_core_agents
-        # Sync core agents
-        core_agents_path = os.path.join(os.path.dirname(__file__), "agents", "core_agents.json")
-        if os.path.exists(core_agents_path):
-            with open(core_agents_path, "r") as f:
-                core_agents = json.load(f)
+        
+        # Sync modular agents
+        agents_dir = os.path.join(os.path.dirname(__file__), "agents")
+        core_agents = []
+        if os.path.exists(agents_dir):
+            for category in os.listdir(agents_dir):
+                category_path = os.path.join(agents_dir, category)
+                if os.path.isdir(category_path):
+                    for filename in os.listdir(category_path):
+                        if filename.endswith(".json"):
+                            with open(os.path.join(category_path, filename), "r") as f:
+                                try:
+                                    agent_data = json.load(f)
+                                    agent_data["category"] = category
+                                    core_agents.append(agent_data)
+                                except json.JSONDecodeError as e:
+                                    logger.error(f"Error parsing {filename}: {e}")
+            
+        if core_agents:
             await sync_core_agents(core_agents)
-            logger.info(f"Synced {len(core_agents)} core agents to DB.")
+            logger.info(f"Synced {len(core_agents)} modular agents to DB.")
             
     except Exception as e:
         logger.error(f"Failed to connect or sync DB: {e}")

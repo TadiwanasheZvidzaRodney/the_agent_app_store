@@ -45,3 +45,135 @@ class MessageRouter:
             import logging
             logging.error(f"Error in MessageRouter: {e}")
             return f"Agent encountered an error: {str(e)}"
+            
+    @staticmethod
+    async def process_web_message(session_id: str, text: str) -> str:
+        from db.client import db
+        from db.crud import get_active_agents, switch_user_agent
+        import json
+        
+        session = await db.session.find_unique(where={"id": session_id}, include={"agent": True, "user": True})
+        if not session:
+            return "Session not found."
+            
+        agent = session.agent
+        
+        # Inject available agents for routing
+        active_agents = await get_active_agents()
+        agents_list = ", ".join([f"'{a.name}' (id: {a.id})" for a in active_agents if a.id != agent.id])
+        
+        system_prompt = agent.system_prompt
+        if agents_list:
+            system_prompt += f"\n\nYou are part of a swarm. If a request requires expertise you don't have, you can use the 'delegate_task' tool to assign a sub-task to another agent and synthesize their response. If you want to permanently hand off the user to another agent, use 'transfer_to_agent'. Available agents: {agents_list}."
+
+        await save_message(session_id=session.id, role="user", content=text)
+        
+        history = await get_session_history(session_id=session.id, limit=10)
+        messages = [{"role": "system", "content": system_prompt}]
+        for msg in history:
+            messages.append({"role": msg.role, "content": msg.content})
+            
+        tools = [
+            {
+                "type": "function",
+                "function": {
+                    "name": "transfer_to_agent",
+                    "description": "Permanently transfers the conversation to another specialized agent.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "agent_id": { "type": "string" },
+                            "reason": { "type": "string" }
+                        },
+                        "required": ["agent_id", "reason"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "delegate_task",
+                    "description": "Delegates a specific sub-task to a specialist agent and waits for their response to synthesize your final answer.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "agent_id": { "type": "string", "description": "The ID of the specialist agent" },
+                            "task_description": { "type": "string", "description": "Detailed description of the task for the specialist" }
+                        },
+                        "required": ["agent_id", "task_description"]
+                    }
+                }
+            }
+        ]
+            
+        max_turns = 3
+        for turn in range(max_turns):
+            try:
+                chat_completion = await client.chat.completions.create(
+                    messages=messages,
+                    model=agent.llm_model or "llama3-8b-8192",
+                    tools=tools,
+                    tool_choice="auto"
+                )
+                
+                message = chat_completion.choices[0].message
+                
+                if message.tool_calls:
+                    tool_call = message.tool_calls[0]
+                    if tool_call.function.name == "transfer_to_agent":
+                        args = json.loads(tool_call.function.arguments)
+                        target_agent_id = args.get("agent_id")
+                        reason = args.get("reason")
+                        new_session = await switch_user_agent(session.user.id, target_agent_id)
+                        reply = f"🔄 *Transferring you to another agent...*\nReason: {reason}"
+                        return (reply, new_session.id)
+                        
+                    elif tool_call.function.name == "delegate_task":
+                        args = json.loads(tool_call.function.arguments)
+                        target_agent_id = args.get("agent_id")
+                        task = args.get("task_description")
+                        
+                        specialist_reply = await MessageRouter.run_agent_headless(target_agent_id, task)
+                        
+                        # Add tool call to messages, then tool response
+                        messages.append({
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [{"id": tool_call.id, "type": "function", "function": {"name": tool_call.function.name, "arguments": tool_call.function.arguments}}]
+                        })
+                        messages.append({
+                            "role": "tool",
+                            "tool_call_id": tool_call.id,
+                            "name": tool_call.function.name,
+                            "content": f"Specialist Reply: {specialist_reply}"
+                        })
+                        continue # Re-prompt the LLM
+                
+                reply = message.content or ""
+                await save_message(session_id=session.id, role="assistant", content=reply)
+                return (reply, session.id)
+            except Exception as e:
+                return (f"Agent error: {str(e)}", session_id)
+        
+        # If loop exhausts
+        return ("Sorry, I took too long to think.", session_id)
+        
+    @staticmethod
+    async def run_agent_headless(agent_id: str, prompt: str) -> str:
+        from db.client import db
+        agent = await db.agent.find_unique(where={"id": agent_id})
+        if not agent:
+            return "Error: Specialist Agent not found."
+            
+        messages = [
+            {"role": "system", "content": agent.system_prompt},
+            {"role": "user", "content": prompt}
+        ]
+        try:
+            chat_completion = await client.chat.completions.create(
+                messages=messages,
+                model=agent.llm_model or "llama3-8b-8192",
+            )
+            return chat_completion.choices[0].message.content or ""
+        except Exception as e:
+            return f"Agent failed to complete task: {e}"

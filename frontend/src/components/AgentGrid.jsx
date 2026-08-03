@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function AgentGrid({ agents, loading }) {
   return (
     <section className="grid-section">
@@ -18,6 +20,11 @@ export default function AgentGrid({ agents, loading }) {
               <div className="card-footer">
                 <span className="voice-tag">🎤 {agent.voice_type}</span>
                 <span className={`status-dot ${agent.isActive ? 'live' : 'offline'}`}></span>
+              </div>
+              <div style={{ marginTop: '16px' }}>
+                <Link to={`/chat/${agent.id}`} className="chat-link">
+                  Chat Now
+                </Link>
               </div>
             </div>
           ))}

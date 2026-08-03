@@ -7,6 +7,7 @@ model Agent {
   llm_model     String    @default("llama3-8b-8192")
   isActive      Boolean   @default(true)
   is_system     Boolean   @default(false)
+  category      String    @default("general")
   createdAt     DateTime  @default(now())
   sessions      Session[]
 }

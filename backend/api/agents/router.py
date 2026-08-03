@@ -53,3 +53,25 @@ async def delete_agent(agent_id: str):
         return {"status": "success", "message": "Agent deleted"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+from pydantic import BaseModel
+from typing import Optional
+
+class ChatRequest(BaseModel):
+    session_id: Optional[str] = None
+    text: str
+    web_user_id: str = "web-user-1" # dummy user for web
+
+@router.post("/{agent_id}/chat")
+async def chat_with_agent(agent_id: str, req: ChatRequest):
+    from db.crud import get_or_create_user, switch_user_agent
+    from core.router import MessageRouter
+    
+    session_id = req.session_id
+    if not session_id:
+        db_user = await get_or_create_user(req.web_user_id, "Web User")
+        session = await switch_user_agent(db_user.id, agent_id)
+        session_id = session.id
+        
+    reply, new_session_id = await MessageRouter.process_web_message(session_id=session_id, text=req.text)
+    return {"reply": reply, "session_id": new_session_id}
