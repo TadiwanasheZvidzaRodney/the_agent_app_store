@@ -8,6 +8,7 @@ model Agent {
   isActive      Boolean   @default(true)
   is_system     Boolean   @default(false)
   category      String    @default("general")
+  capability_embedding Unsupported("vector(1536)")?
   createdAt     DateTime  @default(now())
   sessions      Session[]
 }

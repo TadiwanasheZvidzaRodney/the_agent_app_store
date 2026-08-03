@@ -1,15 +1,23 @@
-# The Agent App Store 🤖
+# The Hub: AI Agent Swarm Ecosystem 🤖
 
-A modular, highly scalable "App Store" for AI agents. This platform allows users to browse, switch between, and interact with various AI personas, primarily utilizing a Telegram interface and a high-performance web dashboard.
+A modular, highly scalable "App Store" for AI agents. This platform allows users to browse, switch between, and interact with various AI personas. It has evolved from a simple Telegram bot into a **Massive Multi-Agent Swarm Ecosystem** where agents can dynamically discover and collaborate with each other.
+
+## 🧠 Core Features
+
+- **Hierarchical Swarm Architecture**: Top-level "Supervisor" agents (like the Master Orchestrator) can break down complex user requests and delegate sub-tasks to specialist agents in the background, synthesizing their responses for the user.
+- **Semantic Agent Discovery**: Utilizing Supabase `pgvector`, agents are embedded into a vector space based on their capabilities. Supervisors dynamically search the vector database to discover and recruit the exact experts they need on the fly.
+- **Multi-Transport Interfaces**: 
+  - **Web Dashboard & Chat**: A premium React dashboard to create agents and a dedicated web-chat UI to interact with them directly in the browser.
+  - **Telegram Bot**: Native integration via webhooks/polling, maintaining conversation memory across transports.
+- **Modular Domains**: Agents are structured logically by domain (`business`, `personal`, `system`), making it trivial to scale the ecosystem.
 
 ## 🏗 Architecture
 
 This project strictly adheres to a **Domain-Driven Design (DDD)** and Separation of Concerns:
 - **Backend**: FastAPI (Python), serving as the core orchestration and API layer.
 - **Frontend**: React + Vite + Vanilla CSS, providing a premium, ultra-modern dashboard for agent management.
-- **AI Pipeline**: Built on the [Pipecat](https://pipecat.ai) framework.
-- **Database**: PostgreSQL (hosted on [Supabase](https://supabase.com)) accessed via `prisma-client-py` with asyncio support.
-- **Transports**: Highly modular, currently supporting **Telegram** webhooks and API polling, with a unified `MessageRouter` designed to easily support WhatsApp and WebSockets in the future.
+- **Database**: PostgreSQL with `pgvector` (hosted on Supabase) accessed via `prisma-client-py` with asyncio support.
+- **Routing**: A unified `MessageRouter` that handles cross-agent tool calling, memory management, and dynamic LLM (Groq) generation.
 
 ---
 
@@ -18,7 +26,7 @@ This project strictly adheres to a **Domain-Driven Design (DDD)** and Separation
 ### 1. Prerequisites
 - Python 3.10+
 - Node.js 18+
-- A [Supabase](https://supabase.com) account (for PostgreSQL)
+- A [Supabase](https://supabase.com) account (for PostgreSQL, **must support pgvector**)
 - A Telegram Bot Token (from [@BotFather](https://t.me/botfather))
 - A [Groq API Key](https://console.groq.com/) for LLM inference
 
@@ -88,20 +96,23 @@ npm run dev
 ```text
 /agents_store
  ├── /backend               # Python FastAPI application
+ │   ├── /agents            # Modular JSON agent definitions
+ │   │   ├── /business      # Business specialists (e.g. Sales, Tech Support)
+ │   │   ├── /personal      # Personal specialists (e.g. Fitness, Therapy)
+ │   │   └── /system        # Supervisor agents (e.g. Master Orchestrator)
  │   ├── /api               # REST API Routers & Schemas (Agents, Users)
- │   ├── /core              # Core AI Pipeline logic (Pipecat orchestration)
- │   ├── /db                # Prisma Client & CRUD logic separated by domain
+ │   ├── /core              # Unified MessageRouter & Swarm Delegation
+ │   ├── /db                # Prisma Client & Vector Search logic
  │   ├── /prisma            # Prisma schema definitions (Modularized)
- │   ├── /services          # External integrations (Groq, TTS)
- │   ├── /transports        # Protocol integrations
- │   │   └── /telegram      # Telegram bot webhooks and API polling
- │   ├── main.py            # Entry point for Uvicorn
- │   └── requirements.txt
+ │   ├── /services          # External integrations (Groq, TTS, Embeddings)
+ │   ├── /transports        # Protocol integrations (Telegram)
+ │   └── main.py            # Entry point for Uvicorn
  │
  ├── /frontend              # React + Vite application
  │   ├── /src
  │   │   ├── /assets
  │   │   ├── /components
+ │   │   ├── /pages         # Dashboard, Landing Page, and Web Chat UI
  │   │   ├── App.jsx
  │   │   └── index.css      # Premium Design System tokens
  │   ├── index.html

@@ -77,6 +77,20 @@ class MessageRouter:
             {
                 "type": "function",
                 "function": {
+                    "name": "search_experts",
+                    "description": "Searches the network of millions of agents for an expert matching your query. Use this to find an agent's ID before delegating a task.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "query": { "type": "string", "description": "The expertise you are looking for (e.g. 'web design', 'Python optimization')" }
+                        },
+                        "required": ["query"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
                     "name": "transfer_to_agent",
                     "description": "Permanently transfers the conversation to another specialized agent.",
                     "parameters": {
@@ -120,7 +134,32 @@ class MessageRouter:
                 
                 if message.tool_calls:
                     tool_call = message.tool_calls[0]
-                    if tool_call.function.name == "transfer_to_agent":
+                    
+                    if tool_call.function.name == "search_experts":
+                        args = json.loads(tool_call.function.arguments)
+                        query = args.get("query")
+                        
+                        from db.search import search_agents_by_capability
+                        found_experts = await search_agents_by_capability(query)
+                        
+                        expert_details = ""
+                        for e in found_experts:
+                            expert_details += f"- Name: {e.name}, ID: {e.id}, Description: {e.description}\n"
+                            
+                        messages.append({
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [{"id": tool_call.id, "type": "function", "function": {"name": tool_call.function.name, "arguments": tool_call.function.arguments}}]
+                        })
+                        messages.append({
+                            "role": "tool",
+                            "tool_call_id": tool_call.id,
+                            "name": tool_call.function.name,
+                            "content": f"Found Experts:\n{expert_details}"
+                        })
+                        continue
+                        
+                    elif tool_call.function.name == "transfer_to_agent":
                         args = json.loads(tool_call.function.arguments)
                         target_agent_id = args.get("agent_id")
                         reason = args.get("reason")
