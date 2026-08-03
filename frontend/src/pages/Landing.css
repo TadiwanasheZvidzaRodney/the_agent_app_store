@@ -6,6 +6,9 @@
   flex-direction: column;
   background-color: var(--bg);
   overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(170, 59, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
 }
 
 /* Navigation */
@@ -76,6 +79,12 @@
   text-align: center;
 }
 
+@keyframes pulse-glow {
+  0% { transform: translateX(-50%) scale(1); opacity: 0.15; }
+  50% { transform: translateX(-50%) scale(1.05); opacity: 0.2; }
+  100% { transform: translateX(-50%) scale(1); opacity: 0.15; }
+}
+
 .hero-glow {
   position: absolute;
   top: -30%;
@@ -89,12 +98,13 @@
   border-radius: 50%;
   z-index: 0;
   pointer-events: none;
+  animation: pulse-glow 6s infinite ease-in-out;
 }
 
 .hero-content {
   position: relative;
   z-index: 10;
-  max-width: 800px;
+  max-width: 900px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -130,8 +140,86 @@
   font-size: 22px;
   color: var(--text);
   line-height: 1.6;
-  max-width: 650px;
+  max-width: 700px;
   margin: 0 auto;
+}
+
+/* Swarm Demo Card (Terminal Style) */
+.swarm-demo-card {
+  background: rgba(20, 21, 26, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  margin: 16px 0;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  overflow: hidden;
+  text-align: left;
+}
+
+.demo-header {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.dot.red { background: #ff5f56; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #27c93f; }
+
+.demo-title {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-family: monospace;
+  margin-left: 8px;
+}
+
+.demo-body {
+  padding: 24px;
+  font-family: monospace;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 160px;
+}
+
+.log-line {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.log-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.log-line.user {
+  color: #fff;
+}
+.log-line.user .prompt {
+  color: var(--accent);
+  margin-right: 8px;
+  font-weight: bold;
+}
+.log-line.system {
+  color: #8892b0;
+}
+.log-line.success {
+  color: #27c93f;
+}
+.log-line.action {
+  color: #ffbd2e;
 }
 
 .hero-actions {
@@ -160,7 +248,8 @@
 
 .secondary-btn {
   display: inline-block;
-  background: var(--code-bg);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
   color: var(--text-h);
   border: 1px solid var(--border);
   text-decoration: none;
@@ -172,6 +261,7 @@
 }
 
 .secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
   border-color: var(--accent);
 }
 
@@ -212,35 +302,53 @@
   }
 }
 
-.feature-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
+.feature-card.glass {
+  background: rgba(var(--bg-rgb, 20, 21, 26), 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 16px;
-  padding: 32px;
+  padding: 40px 32px;
   text-align: left;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
 }
 
-.feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow);
-  border-color: var(--accent-border);
+.feature-card.glass::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.feature-card.glass:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.feature-card.glass:hover::before {
+  opacity: 1;
 }
 
 .feature-icon {
-  font-size: 40px;
+  font-size: 48px;
   margin-bottom: 24px;
+  filter: drop-shadow(0 4px 8px rgba(170, 59, 255, 0.3));
 }
 
 .feature-card h3 {
-  font-size: 20px;
+  font-size: 22px;
   color: var(--text-h);
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
 }
 
 .feature-card p {
   color: var(--text);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
 }
 

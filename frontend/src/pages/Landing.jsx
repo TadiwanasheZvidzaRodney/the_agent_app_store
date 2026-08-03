@@ -1,8 +1,18 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import logo from '../assets/logo.svg'
 import './Landing.css'
 
 export default function Landing() {
+  const [demoStep, setDemoStep] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDemoStep((prev) => (prev + 1) % 4)
+    }, 2500)
+    return () => clearInterval(timer)
+  }, [])
+
   return (
     <div className="landing-container">
       {/* Navigation */}
@@ -13,7 +23,7 @@ export default function Landing() {
         </div>
         <div className="nav-links">
           <a href="#features">Features</a>
-          <a href="#about">About</a>
+          <a href="#architecture">Architecture</a>
           <Link to="/dashboard" className="nav-cta">Go to Dashboard</Link>
         </div>
       </nav>
@@ -22,19 +32,43 @@ export default function Landing() {
       <section className="startup-hero">
         <div className="hero-glow"></div>
         <div className="hero-content">
-          <div className="hero-badge">✨ Version 1.0 is live</div>
+          <div className="hero-badge">✨ Swarm Architecture 2.0</div>
           <h1 className="hero-title">
-            The Ultimate <span className="text-gradient">AI Agent</span> Ecosystem
+            The Infinite <span className="text-gradient">AI Swarm</span> Ecosystem
           </h1>
           <p className="hero-subtitle">
-            Deploy, manage, and scale intelligent personas directly to Telegram. Bring your custom AI agents to life in seconds.
+            Deploy, discover, and orchestrate millions of intelligent specialists. The Master Orchestrator breaks down tasks and dynamically recruits the perfect team.
           </p>
+          
+          <div className="swarm-demo-card">
+            <div className="demo-header">
+              <span className="dot red"></span>
+              <span className="dot yellow"></span>
+              <span className="dot green"></span>
+              <span className="demo-title">Swarm Delegation Protocol</span>
+            </div>
+            <div className="demo-body">
+              <div className={`log-line user ${demoStep >= 0 ? 'visible' : ''}`}>
+                <span className="prompt">&gt;</span> Build a fitness app and write the marketing copy.
+              </div>
+              <div className={`log-line system ${demoStep >= 1 ? 'visible' : ''}`}>
+                [Orchestrator] Searching vector DB for experts...
+              </div>
+              <div className={`log-line success ${demoStep >= 2 ? 'visible' : ''}`}>
+                ✔ Found: sys-fitness-coach (0.98), sys-copywriter (0.94)
+              </div>
+              <div className={`log-line action ${demoStep >= 3 ? 'visible' : ''}`}>
+                ⚡ Delegating sub-tasks to swarm...
+              </div>
+            </div>
+          </div>
+
           <div className="hero-actions">
             <Link to="/dashboard" className="primary-btn">
-              Get Started Free
+              Enter The Hub
             </Link>
             <a href="#features" className="secondary-btn">
-              Learn More
+              See How It Works
             </a>
           </div>
         </div>
@@ -43,25 +77,25 @@ export default function Landing() {
       {/* Features Section */}
       <section id="features" className="startup-features">
         <div className="section-header">
-          <h2>Everything you need to scale AI</h2>
-          <p>Powerful tools designed for creators and developers.</p>
+          <h2>An ecosystem that scales to millions</h2>
+          <p>Powered by pgvector and Hierarchical Orchestration.</p>
         </div>
         
         <div className="features-grid">
-          <div className="feature-card">
-            <div className="feature-icon">🚀</div>
-            <h3>One-Click Deploy</h3>
-            <p>Push your custom agents instantly to Telegram without touching any infrastructure code.</p>
+          <div className="feature-card glass">
+            <div className="feature-icon">🔍</div>
+            <h3>Semantic Discovery</h3>
+            <p>Supervisors use cosine similarity vector search to dynamically find and recruit the exact experts they need from a massive database of agents.</p>
           </div>
-          <div className="feature-card">
-            <div className="feature-icon">🧠</div>
-            <h3>Multi-Model Support</h3>
-            <p>Seamlessly switch between Llama 3, Gemini, and other cutting-edge LLMs on the fly.</p>
+          <div className="feature-card glass">
+            <div className="feature-icon">⚡</div>
+            <h3>Swarm Protocol</h3>
+            <p>Agents don't just chat—they delegate. The Orchestrator spawns sub-agents in the background, waits for their output, and synthesizes a master response.</p>
           </div>
-          <div className="feature-card">
-            <div className="feature-icon">💬</div>
-            <h3>Persistent Memory</h3>
-            <p>Agents remember past interactions, providing a highly contextual and personalized experience.</p>
+          <div className="feature-card glass">
+            <div className="feature-icon">🌐</div>
+            <h3>Multi-Transport</h3>
+            <p>Interact with your swarm via a premium React Web UI, or take them on the go natively through Telegram with perfectly synced memory.</p>
           </div>
         </div>
       </section>
@@ -74,8 +108,8 @@ export default function Landing() {
             <span>The Hub © 2026</span>
           </div>
           <div className="footer-links">
+            <a href="#">Swarm Docs</a>
             <a href="#">Privacy</a>
-            <a href="#">Terms</a>
           </div>
         </div>
       </footer>
