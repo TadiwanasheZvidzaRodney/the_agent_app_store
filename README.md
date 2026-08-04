@@ -91,6 +91,28 @@ npm run dev
 
 ---
 
+## 🌍 Production Deployment
+
+The project is architected to run across a split-deployment model for optimal performance: the Frontend on a static CDN, and the Backend on a robust containerized platform to support the always-on Telegram polling.
+
+### 1. Deploying the Backend (Render - Free Tier)
+We recommend [Render](https://render.com/) for the FastAPI backend as they offer a completely free tier.
+1. Create a new account on Render and connect your GitHub repository.
+2. Go to **Blueprints** and create a New Blueprint Instance using the `render.yaml` file in this repo.
+3. Render will automatically detect the configuration, run `prisma generate`, and start the `uvicorn` server.
+4. **Environment Variables**: Add your `DATABASE_URL`, `DIRECT_URL`, `TELEGRAM_BOT_TOKEN`, and `GROQ_API_KEY` in the Render dashboard under the service settings.
+5. Copy the generated Render URL (e.g., `https://your-app.onrender.com`).
+*Note: Render's free tier spins down after 15 minutes of inactivity. Simply opening your frontend Dashboard will instantly wake it back up.*
+
+### 2. Deploying the Frontend (Vercel - Free Tier)
+Deploy the React application to [Vercel](https://vercel.com/) for lightning-fast, free static hosting.
+1. Import your GitHub repository into Vercel.
+2. Set the Root Directory to `frontend`.
+3. Set the Build Command to `npm run build` and Output Directory to `dist`.
+4. **Environment Variables**: Add `VITE_API_URL` and set it to your Render backend URL (e.g., `https://your-app.onrender.com`).
+5. Vercel will use the provided `vercel.json` to handle React Router SPA routing seamlessly.
+
+---
 ## 📁 Project Structure
 
 ```text

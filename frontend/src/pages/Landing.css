@@ -390,3 +390,83 @@
 .footer-links a:hover {
   color: var(--text-h);
 }
+
+/* Architecture Section */
+.startup-architecture {
+  padding: 40px 24px 120px;
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+.architecture-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(var(--bg-rgb, 20, 21, 26), 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  padding: 48px;
+  margin-top: 40px;
+}
+
+.arch-layer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.arch-layer.multi {
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.arch-box {
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.arch-box.outline {
+  background: transparent;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  color: var(--text);
+}
+
+.arch-box.master {
+  background: linear-gradient(135deg, var(--accent) 0%, #7a1fd6 100%);
+  color: white;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px -10px rgba(170, 59, 255, 0.6);
+}
+
+.arch-box.specialist {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-h);
+  flex: 1;
+  min-width: 200px;
+}
+
+.arch-box.db {
+  background: rgba(39, 201, 63, 0.1);
+  border: 1px solid rgba(39, 201, 63, 0.3);
+  color: #27c93f;
+  width: 100%;
+  max-width: 600px;
+}
+
+.arch-arrow {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.2);
+  margin: 16px 0;
+  font-family: monospace;
+}

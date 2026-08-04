@@ -100,6 +100,34 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Architecture Section */}
+      <section id="architecture" className="startup-architecture">
+        <div className="section-header">
+          <h2>How the Swarm Works</h2>
+          <p>A peek under the hood of our modular, domain-driven infrastructure.</p>
+        </div>
+        
+        <div className="architecture-diagram">
+          <div className="arch-layer">
+            <div className="arch-box outline">User Request (Web / Telegram)</div>
+          </div>
+          <div className="arch-arrow">↓</div>
+          <div className="arch-layer">
+            <div className="arch-box master">Master Orchestrator (Supervisor)</div>
+          </div>
+          <div className="arch-arrow">↙ ↓ ↘</div>
+          <div className="arch-layer multi">
+            <div className="arch-box specialist">Business Expert</div>
+            <div className="arch-box specialist">Personal Coach</div>
+            <div className="arch-box specialist">Code Optimizer</div>
+          </div>
+          <div className="arch-arrow">↓</div>
+          <div className="arch-layer">
+            <div className="arch-box db">Supabase pgvector Database</div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="startup-footer">
         <div className="footer-content">

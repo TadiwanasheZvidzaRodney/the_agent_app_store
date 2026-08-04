@@ -1,0 +1,32 @@
+# 🌍 Production Deployment
+
+The project is now fully configured for a **split-deployment strategy**, making it ready for production without sacrificing the Telegram bot's always-on polling architecture.
+
+## What Was Configured
+
+> [!NOTE]
+> By splitting the deployment, we keep the ultra-fast CDN delivery of Vercel for the React frontend, while utilizing Railway's containerized execution for the heavy Python backend and Prisma ORM.
+
+### 1. Frontend Configuration (Vercel)
+- **Dynamic API Routing**: Removed all hardcoded `http://localhost:8000` URLs across `Dashboard.jsx`, `Chat.jsx`, and `AgentForm.jsx`. The app now defaults to `import.meta.env.VITE_API_URL` which can be set in the Vercel dashboard.
+- **SPA Rewrite Rules**: Added a [vercel.json](file:///c:/Users/tadiwanashe.zvidza/Documents/agents_store/frontend/vercel.json) file to the `frontend/` directory to ensure React Router handles page refreshes correctly without throwing a `404 Not Found` error.
+
+### 2. Backend Configuration (Railway)
+- **Nixpacks Build Engine**: Created a [railway.toml](file:///c:/Users/tadiwanashe.zvidza/Documents/agents_store/backend/railway.toml) configuration file.
+- **Prisma Lifecycle Hooks**:
+  - `buildCommand`: Runs `prisma generate` to compile the Prisma Engine binary into the Linux container.
+  - `startCommand`: Automatically runs `prisma db push` before booting `uvicorn`, ensuring your Supabase database schema is always in sync with your codebase.
+
+### 3. Documentation
+- The [README.md](file:///c:/Users/tadiwanashe.zvidza/Documents/agents_store/README.md) has been updated with step-by-step instructions on how to connect your GitHub repo to both Vercel and Railway.
+
+## How to Deploy Now
+
+1. Push these changes to your GitHub repository.
+2. Go to **Railway.app** -> New Project -> Deploy from GitHub -> Set root directory to `/backend`.
+3. Copy the URL Railway gives you.
+4. Go to **Vercel.com** -> New Project -> Import from GitHub -> Set root directory to `frontend/`.
+5. In Vercel's Environment Variables, set `VITE_API_URL` to your Railway URL.
+
+> [!TIP]
+> Remember to add your `TELEGRAM_BOT_TOKEN`, `GROQ_API_KEY`, and Supabase `DATABASE_URL` as Environment Variables inside your Railway project dashboard!

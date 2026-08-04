@@ -5,7 +5,9 @@ import AgentForm from '../components/AgentForm'
 import AgentGrid from '../components/AgentGrid'
 import '../App.css'
 
-const API_URL = 'http://localhost:8000/api/agents'
+const API_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api/agents` 
+  : 'http://localhost:8000/api/agents'
 
 export default function Dashboard() {
   const [agents, setAgents] = useState([])
