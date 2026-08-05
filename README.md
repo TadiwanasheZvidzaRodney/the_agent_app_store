@@ -1,5 +1,8 @@
 # The Hub: AI Agent Swarm Ecosystem 🤖
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+
 A modular, highly scalable "App Store" for AI agents. This platform allows users to browse, switch between, and interact with various AI personas. It has evolved from a simple Telegram bot into a **Massive Multi-Agent Swarm Ecosystem** where agents can dynamically discover and collaborate with each other.
 
 ## 🧠 Core Features
@@ -144,5 +147,14 @@ Deploy the React application to [Vercel](https://vercel.com/) for lightning-fast
  └── .gitignore             # Global git ignores
 ```
 
-## 📜 Contributing
-Please refer to `AGENTS.md` for strict guidelines regarding anti-spaghetti code and maintaining absolute separation of concerns.
+## 🤝 Contributing
+
+We welcome contributions from the community! Whether you are adding a new specialist agent to the swarm, fixing a bug, or improving the React dashboard, please check out our [Contributing Guidelines](CONTRIBUTING.md) for how to get started.
+
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
+### Architectural Rules
+When contributing, please refer to `AGENTS.md` for strict guidelines regarding anti-spaghetti code and maintaining absolute separation of concerns.
+
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
