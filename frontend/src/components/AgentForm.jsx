@@ -5,7 +5,7 @@ export default function AgentForm({ onAgentCreated }) {
     name: '',
     description: '',
     system_prompt: '',
-    llm_model: 'llama3-8b-8192',
+    llm_model: 'llama-3.1-8b-instant',
     voice_type: 'default'
   })
 
@@ -74,7 +74,7 @@ export default function AgentForm({ onAgentCreated }) {
           <div className="input-group">
             <label>LLM Model</label>
             <select name="llm_model" value={formData.llm_model} onChange={handleChange}>
-              <option value="llama3-8b-8192">Llama 3 (8B) - Fastest</option>
+              <option value="llama-3.1-8b-instant">Llama 3.1 (8B) - Fastest</option>
               <option value="llama3-70b-8192">Llama 3 (70B) - Smartest</option>
               <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
             </select>

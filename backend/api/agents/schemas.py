@@ -6,7 +6,7 @@ class AgentCreate(BaseModel):
     system_prompt: str
     description: Optional[str] = None
     voice_type: str = "default"
-    llm_model: str = "llama3-8b-8192"
+    llm_model: str = "llama-3.1-8b-instant"
     isActive: bool = True
 
 class AgentUpdate(BaseModel):

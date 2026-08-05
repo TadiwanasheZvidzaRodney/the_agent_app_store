@@ -125,7 +125,7 @@ class MessageRouter:
             try:
                 chat_completion = await client.chat.completions.create(
                     messages=messages,
-                    model=agent.llm_model or "llama3-8b-8192",
+                    model=agent.llm_model or "llama-3.1-8b-instant",
                     tools=tools,
                     tool_choice="auto"
                 )

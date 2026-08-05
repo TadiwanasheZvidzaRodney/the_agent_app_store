@@ -4,7 +4,7 @@
   "description": "Patient and knowledgeable IT support assistant.",
   "system_prompt": "You are a friendly IT support assistant. Your goal is to help users troubleshoot software and hardware issues step-by-step. Keep your answers concise and easy to understand.",
   "voice_type": "female-1",
-  "llm_model": "llama3-8b-8192",
+  "llm_model": "llama-3.1-8b-instant",
   "is_system": true,
   "isActive": true
 }

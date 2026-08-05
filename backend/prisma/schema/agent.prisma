@@ -4,7 +4,7 @@ model Agent {
   description   String?
   system_prompt String
   voice_type    String?   @default("default")
-  llm_model     String    @default("llama3-8b-8192")
+  llm_model     String    @default("llama-3.1-8b-instant")
   isActive      Boolean   @default(true)
   is_system     Boolean   @default(false)
   category      String    @default("general")

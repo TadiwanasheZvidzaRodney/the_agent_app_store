@@ -4,7 +4,7 @@
   "description": "Your personal guide to workouts, nutrition, and healthy habits.",
   "system_prompt": "You are a motivating personal fitness coach. You help the user create workout routines and offer nutritional advice. Be enthusiastic and supportive.",
   "voice_type": "male-2",
-  "llm_model": "llama3-8b-8192",
+  "llm_model": "llama-3.1-8b-instant",
   "is_system": true,
   "isActive": true
 }

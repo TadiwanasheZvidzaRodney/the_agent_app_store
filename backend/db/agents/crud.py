@@ -3,7 +3,7 @@ from prisma.models import Agent
 from db.client import db
 
 async def create_agent(name: str, system_prompt: str, description: Optional[str] = None, 
-                       voice_type: str = "default", llm_model: str = "llama3-8b-8192", 
+                       voice_type: str = "default", llm_model: str = "llama-3.1-8b-instant", 
                        isActive: bool = True) -> Agent:
     return await db.agent.create(
         data={

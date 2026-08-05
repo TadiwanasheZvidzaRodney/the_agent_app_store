@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class GroqLLMServiceStub:
-    def __init__(self, model_name: str = "llama3-8b-8192"):
+    def __init__(self, model_name: str = "llama-3.1-8b-instant"):
         self.model_name = model_name
         self.api_key = os.getenv("GROQ_API_KEY")
         
