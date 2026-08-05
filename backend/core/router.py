@@ -196,7 +196,7 @@ class MessageRouter:
         try:
             chat_completion = await client.chat.completions.create(
                 messages=messages,
-                model=agent.llm_model or "llama3-8b-8192",
+                model=agent.llm_model or "llama-3.1-8b-instant",
             )
             return chat_completion.choices[0].message.content or ""
         except Exception as e:
