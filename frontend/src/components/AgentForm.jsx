@@ -75,7 +75,7 @@ export default function AgentForm({ onAgentCreated }) {
             <label>LLM Model</label>
             <select name="llm_model" value={formData.llm_model} onChange={handleChange}>
               <option value="llama-3.1-8b-instant">Llama 3.1 (8B) - Fastest</option>
-              <option value="llama3-70b-8192">Llama 3 (70B) - Smartest</option>
+              <option value="llama-3.3-70b-versatile">Llama 3.3 (70B) - Smartest</option>
               <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
             </select>
           </div>

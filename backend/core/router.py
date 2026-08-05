@@ -15,31 +15,11 @@ class MessageRouter:
         # 2. Get the active session for this user
         session = await get_active_session(user_id=user.id)
         if not session:
-            return "You don't have an active agent session right now. Please select one from the Dashboard!"
+            return "You don't have an active agent session right now. Send /store to select one!"
             
-        agent = session.agent
-        
-        # 3. Save the incoming user message to the DB
-        await save_message(session_id=session.id, role="user", content=text)
-        
-        # 4. Fetch conversation history for context
-        history = await get_session_history(session_id=session.id, limit=10)
-        
-        # 5. Build the prompt payload
-        messages = [{"role": "system", "content": agent.system_prompt}]
-        for msg in history:
-            messages.append({"role": msg.role, "content": msg.content})
-            
-        # 6. Call the LLM (Groq) via the Pipecat-agnostic pipeline
+        # 3. Use the unified swarm pipeline
         try:
-            chat_completion = await client.chat.completions.create(
-                messages=messages,
-                model=agent.llm_model or "llama3-8b-8192",
-            )
-            reply = chat_completion.choices[0].message.content
-            
-            # 7. Save the bot's response to the DB
-            await save_message(session_id=session.id, role="assistant", content=reply)
+            reply, _ = await MessageRouter.process_web_message(session.id, text)
             return reply
         except Exception as e:
             import logging
@@ -63,9 +43,58 @@ class MessageRouter:
         agents_list = ", ".join([f"'{a.name}' (id: {a.id})" for a in active_agents if a.id != agent.id])
         
         system_prompt = agent.system_prompt
-        if agents_list:
+        tools = None
+        
+        if agent.id == "sys-orchestrator" and agents_list:
             system_prompt += f"\n\nYou are part of a swarm. If a request requires expertise you don't have, you can use the 'delegate_task' tool to assign a sub-task to another agent and synthesize their response. If you want to permanently hand off the user to another agent, use 'transfer_to_agent'. Available agents: {agents_list}."
 
+            tools = [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "search_experts",
+                        "description": "Searches the network of millions of agents for an expert matching your query. Use this to find an agent's ID before delegating a task.",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "query": { "type": "string", "description": "The expertise you are looking for (e.g. 'web design', 'Python optimization')" }
+                            },
+                            "required": ["query"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "transfer_to_agent",
+                        "description": "Permanently transfers the conversation to another specialized agent.",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "agent_id": { "type": "string" },
+                                "reason": { "type": "string" }
+                            },
+                            "required": ["agent_id", "reason"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "delegate_task",
+                        "description": "Delegates a specific sub-task to a specialist agent and waits for their response to synthesize your final answer.",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "agent_id": { "type": "string", "description": "The ID of the specialist agent" },
+                                "task_description": { "type": "string", "description": "Detailed description of the task for the specialist" }
+                            },
+                            "required": ["agent_id", "task_description"]
+                        }
+                    }
+                }
+            ]
+            
         await save_message(session_id=session.id, role="user", content=text)
         
         history = await get_session_history(session_id=session.id, limit=10)
@@ -73,62 +102,18 @@ class MessageRouter:
         for msg in history:
             messages.append({"role": msg.role, "content": msg.content})
             
-        tools = [
-            {
-                "type": "function",
-                "function": {
-                    "name": "search_experts",
-                    "description": "Searches the network of millions of agents for an expert matching your query. Use this to find an agent's ID before delegating a task.",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "query": { "type": "string", "description": "The expertise you are looking for (e.g. 'web design', 'Python optimization')" }
-                        },
-                        "required": ["query"]
-                    }
-                }
-            },
-            {
-                "type": "function",
-                "function": {
-                    "name": "transfer_to_agent",
-                    "description": "Permanently transfers the conversation to another specialized agent.",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "agent_id": { "type": "string" },
-                            "reason": { "type": "string" }
-                        },
-                        "required": ["agent_id", "reason"]
-                    }
-                }
-            },
-            {
-                "type": "function",
-                "function": {
-                    "name": "delegate_task",
-                    "description": "Delegates a specific sub-task to a specialist agent and waits for their response to synthesize your final answer.",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "agent_id": { "type": "string", "description": "The ID of the specialist agent" },
-                            "task_description": { "type": "string", "description": "Detailed description of the task for the specialist" }
-                        },
-                        "required": ["agent_id", "task_description"]
-                    }
-                }
-            }
-        ]
-            
         max_turns = 3
         for turn in range(max_turns):
             try:
-                chat_completion = await client.chat.completions.create(
-                    messages=messages,
-                    model=agent.llm_model or "llama-3.1-8b-instant",
-                    tools=tools,
-                    tool_choice="auto"
-                )
+                kwargs = {
+                    "messages": messages,
+                    "model": agent.llm_model or "llama-3.1-8b-instant"
+                }
+                if tools:
+                    kwargs["tools"] = tools
+                    kwargs["tool_choice"] = "auto"
+                    
+                chat_completion = await client.chat.completions.create(**kwargs)
                 
                 message = chat_completion.choices[0].message
                 

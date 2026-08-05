@@ -39,11 +39,11 @@ export default function Chat() {
         })
       })
       const data = await res.json()
-      
+
       if (data.session_id) {
         setSessionId(data.session_id)
       }
-      
+
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
     } catch (err) {
       console.error(err)
@@ -60,7 +60,7 @@ export default function Chat() {
         <div style={{ marginBottom: '16px' }}>
           <Link to="/dashboard" style={{ color: 'var(--text)', textDecoration: 'none' }}>← Back to Dashboard</Link>
         </div>
-        
+
         <div style={{ flex: 1, overflowY: 'auto', background: 'var(--code-bg)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', border: '1px solid var(--border)' }}>
           {messages.length === 0 ? (
             <div style={{ margin: 'auto', color: 'var(--text)', textAlign: 'center' }}>
@@ -74,7 +74,7 @@ export default function Chat() {
               </div>
             ))
           )}
-          {loading && <div style={{ alignSelf: 'flex-start', padding: '12px 16px', color: 'var(--text)' }}>Agent is typing...</div>}
+          {loading && <div style={{ alignSelf: 'flex-start', padding: '12px 16px', color: 'var(--text)' }}>Let me think...</div>}
           <div ref={messagesEndRef} />
         </div>
 
