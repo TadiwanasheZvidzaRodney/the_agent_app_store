@@ -173,7 +173,6 @@ textarea {
 
 .status-dot.live {
   background-color: #10b981;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
 }
 
 .status-dot.offline {

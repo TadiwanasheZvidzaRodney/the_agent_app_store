@@ -56,6 +56,33 @@ export default function Dashboard() {
     <div className="dashboard">
       <Header />
       
+      {/* Community Banner */}
+      <div className="community-banner" style={{
+        background: 'var(--code-bg)',
+        border: '1px solid var(--border)',
+        borderRadius: '12px',
+        padding: '24px',
+        marginBottom: '24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <div>
+          <h3 style={{ margin: '0 0 8px 0', color: 'var(--text-h)' }}>Built by the Community 🌍</h3>
+          <p style={{ margin: 0, color: 'var(--text)' }}>The Hub is open source. Contribute your own specialist agent to the official Swarm registry!</p>
+        </div>
+        <a href="https://github.com/TadiwanasheZvidzaRodney/the_agent_app_store/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" style={{
+          background: 'var(--text-h)',
+          color: 'var(--bg)',
+          padding: '12px 24px',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          fontWeight: 'bold',
+          whiteSpace: 'nowrap'
+        }}>
+          Contribute an Agent
+        </a>
+      </div>
       {/* Render System Agents Grouped by Category */}
       {(() => {
         const categories = [...new Set(systemAgents.map(a => a.category))]

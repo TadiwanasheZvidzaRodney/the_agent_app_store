@@ -24,13 +24,13 @@ export default function Landing() {
         <div className="nav-links">
           <a href="#features">Features</a>
           <a href="#architecture">Architecture</a>
+          <a href="https://github.com/TadiwanasheZvidzaRodney/the_agent_app_store" target="_blank" rel="noopener noreferrer" className="nav-github-link">GitHub</a>
           <Link to="/dashboard" className="nav-cta">Go to Dashboard</Link>
         </div>
       </nav>
       
       {/* Hero Section */}
       <section className="startup-hero">
-        <div className="hero-glow"></div>
         <div className="hero-content">
           <div className="hero-badge">✨ Swarm Architecture 2.0</div>
           <h1 className="hero-title">
@@ -67,8 +67,8 @@ export default function Landing() {
             <Link to="/dashboard" className="primary-btn">
               Enter The Hub
             </Link>
-            <a href="#features" className="secondary-btn">
-              See How It Works
+            <a href="https://github.com/TadiwanasheZvidzaRodney/the_agent_app_store" target="_blank" rel="noopener noreferrer" className="secondary-btn github-btn">
+              ⭐ Star on GitHub
             </a>
           </div>
         </div>
@@ -133,11 +133,12 @@ export default function Landing() {
         <div className="footer-content">
           <div className="footer-brand">
             <img src={logo} alt="The Hub Logo" width="24" height="24" />
-            <span>The Hub © 2026</span>
+            <span>The Hub © 2026. Released under the MIT License.</span>
           </div>
           <div className="footer-links">
-            <a href="#">Swarm Docs</a>
-            <a href="#">Privacy</a>
+            <a href="https://github.com/TadiwanasheZvidzaRodney/the_agent_app_store" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/TadiwanasheZvidzaRodney/the_agent_app_store/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Contribute</a>
+            <a href="https://github.com/TadiwanasheZvidzaRodney/the_agent_app_store/blob/main/CODE_OF_CONDUCT.md" target="_blank" rel="noopener noreferrer">Code of Conduct</a>
           </div>
         </div>
       </footer>

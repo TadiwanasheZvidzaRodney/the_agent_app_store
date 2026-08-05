@@ -6,9 +6,6 @@
   flex-direction: column;
   background-color: var(--bg);
   overflow-x: hidden;
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(170, 59, 255, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
 }
 
 /* Navigation */
@@ -79,28 +76,6 @@
   text-align: center;
 }
 
-@keyframes pulse-glow {
-  0% { transform: translateX(-50%) scale(1); opacity: 0.15; }
-  50% { transform: translateX(-50%) scale(1.05); opacity: 0.2; }
-  100% { transform: translateX(-50%) scale(1); opacity: 0.15; }
-}
-
-.hero-glow {
-  position: absolute;
-  top: -30%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 800px;
-  height: 800px;
-  background: var(--accent);
-  opacity: 0.15;
-  filter: blur(120px);
-  border-radius: 50%;
-  z-index: 0;
-  pointer-events: none;
-  animation: pulse-glow 6s infinite ease-in-out;
-}
-
 .hero-content {
   position: relative;
   z-index: 10;
@@ -114,7 +89,7 @@
 .hero-badge {
   background: var(--accent-bg);
   color: var(--accent);
-  border: 1px solid var(--accent-border);
+  border: 1px solid var(--border);
   padding: 6px 16px;
   border-radius: 50px;
   font-size: 14px;
@@ -131,9 +106,7 @@
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, var(--text-h) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--accent);
 }
 
 .hero-subtitle {
@@ -230,20 +203,19 @@
 
 .primary-btn {
   display: inline-block;
-  background: linear-gradient(135deg, var(--accent) 0%, #7a1fd6 100%);
+  background: var(--accent);
   color: white;
   text-decoration: none;
   padding: 16px 32px;
   border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
-  box-shadow: 0 10px 30px -10px rgba(170, 59, 255, 0.6);
   transition: all 0.3s ease;
 }
 
 .primary-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 40px -10px rgba(170, 59, 255, 0.8);
+  background: var(--text-h);
 }
 
 .secondary-btn {
@@ -303,9 +275,8 @@
 }
 
 .feature-card.glass {
-  background: rgba(var(--bg-rgb, 20, 21, 26), 0.6);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 40px 32px;
   text-align: left;
@@ -315,19 +286,13 @@
 }
 
 .feature-card.glass::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
+  content: none;
 }
 
 .feature-card.glass:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow);
+  border-color: var(--accent);
 }
 
 .feature-card.glass:hover::before {
@@ -440,12 +405,12 @@
 }
 
 .arch-box.master {
-  background: linear-gradient(135deg, var(--accent) 0%, #7a1fd6 100%);
-  color: white;
+  background: var(--text-h);
+  color: var(--bg);
   width: 100%;
   max-width: 400px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 10px 30px -10px rgba(170, 59, 255, 0.6);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 .arch-box.specialist {
