@@ -18,7 +18,28 @@ from api.users.router import router as users_router
 # Load env
 load_dotenv()
 
-app = FastAPI(title="Agent App Store API")
+tags_metadata = [
+    {
+        "name": "Agents",
+        "description": "Operations with specialized AI agents, including creation, listing, updating, deleting, and chatting.",
+    },
+    {
+        "name": "Users",
+        "description": "Operations with users, managing profiles and settings.",
+    },
+]
+
+app = FastAPI(
+    title="Agent App Store API",
+    description="The centralized backend for routing requests across a swarm of specialized AI agents via web and Telegram transports.",
+    version="1.0.0",
+    contact={
+        "name": "API Support",
+        "url": "http://localhost:5173",
+        "email": "support@agentappstore.com",
+    },
+    openapi_tags=tags_metadata,
+)
 
 # Add CORS middleware for the frontend
 app.add_middleware(
